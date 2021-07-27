@@ -1,0 +1,8 @@
+.items{
+    border-bottom: 1px solid lightgray;
+    padding: 5px;
+    margin-right: 5px;
+}
+.price{
+    color: red;
+}
