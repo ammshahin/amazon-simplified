@@ -3,7 +3,7 @@ import './ReviewItems.css';
 import '../Product/Product.css'
 import { removeFromDatabaseCart } from '../../utilities/databaseManager';
 const ReviewItems = (props) => {
-    console.log(props.product);
+    
     const {name, price, seller, quantity} = props.product;
     function refreshPage() {
         window.location.reload(false);

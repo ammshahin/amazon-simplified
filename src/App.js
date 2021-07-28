@@ -5,8 +5,7 @@ import Shop from './components/Shop/Shop';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import Order from './components/Order/Order';
 import Manage from './components/Manage/Manage';

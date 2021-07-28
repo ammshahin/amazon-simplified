@@ -4,9 +4,10 @@ import '../Product/Product.css'
 
 const Cart = (props) => {
     const cart = props.cart;
-    const itemPrice = cart.reduce((total, ct) => total + ct.price, 0)
+    const checkedOut = props.checkedOut;
+    const itemPrice = cart.reduce((total, ct) => total + ct.price*ct.quantity, 0)
     const revBtnShow = props.revBtnShow;
-
+    const checkOutBtn = props.checkOutBtn;
     let shippingCost = 0;
     if(itemPrice > 40){
         shippingCost = 0;
@@ -35,7 +36,7 @@ const Cart = (props) => {
             <p ><small>VAT: {preciseNumber(tax)}</small></p>
             <h4 style={{color:'#dc143c'}}>Total Price: {preciseNumber(grandTotal) } </h4>
             {revBtnShow && <Link to = '/order'> <button className = "cart-btn" >  Review Items</button></Link>}
-            <button className = "cart-btn">Checkout</button>
+            {checkOutBtn && <button className = "cart-btn" onClick={() => checkedOut()}>Checkout</button>}
         </div>
     );
 };

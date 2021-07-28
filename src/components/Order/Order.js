@@ -1,12 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import fakeData from '../../fakeData';
-import { getDatabaseCart } from '../../utilities/databaseManager';
+import { getDatabaseCart, processOrder } from '../../utilities/databaseManager';
 import Cart from '../Cart/Cart';
 import ReviewItems from '../ReviewItems/ReviewItems';
+import happyImg from '../../images/giphy.gif';
 
 const Order = () => {
     const [orderCart, setOrderCart] = useState([]);
+    const [ordered, setOrdered] = useState(false);
 
+    const checkedOut = () => {
+        if(orderCart.length === 0 ){
+            window.alert('Please add some items to cart first!');
+        }
+        else{
+            setOrdered(true);
+        }
+        
+        processOrder();
+        
+        setOrderCart([]);
+        
+    }
     useEffect(() => {
         const products = getDatabaseCart();
         const productKeys = Object.keys(products);
@@ -31,13 +46,15 @@ const Order = () => {
     return (
         <div style={{display: 'flex'}}>
             <div style={review}>
-                <h1>Ordered Products: {orderCart.length}</h1>
                 {
                     orderCart.map((pd, idx) => <ReviewItems key={idx} product={pd} ></ReviewItems>)
                 }
+                {
+                    ordered && <img src={happyImg} alt="" />
+                }
             </div>
             <div style = {cartStyle}>
-                <Cart revBtnShown={false} cart = {orderCart} ></Cart>
+                <Cart checkOutBtn = {true} checkedOut = {checkedOut} revBtnShown={false} cart = {orderCart} ></Cart>
             </div>
 
         </div>

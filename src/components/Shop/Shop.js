@@ -1,28 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import fakeData from '../../fakeData';
-import { addToDatabaseCart } from '../../utilities/databaseManager';
+import { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseManager';
 import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
 import './Shop.css';
 
 const Shop = () => {
     const first10 = fakeData.slice(0, 10);
-    const [products, setProducts] = useState(first10);
-    const [cart, setCart] = useState([])
+    const [products, ] = useState(first10);
+    products.map(pd => pd.quantity = 1);
+    
+    const [cart, setCart] = useState([]);
 
-    const handleProducts = (cartProduct) => {
+    useEffect(()=>{
+        const localStorageCart = getDatabaseCart();
+        const keys = Object.keys(localStorageCart);
         
-        const newCart = [...cart, cartProduct]
+        const storedItems = keys.map(key => {
+            const items = fakeData.find(pd => pd.key === key);
+            items.quantity = localStorageCart[key];
+            return items;
+        })
+        setCart(storedItems);
+    },[])
+    
+    const handleProducts = (cartProduct) => {   
+        let count = 1;
+        const toBeAddedKey = cartProduct.key;
+
+        const sameProduct = cart.find(cart => cart.key === toBeAddedKey);
+        let newCart;
+        if(sameProduct) {
+            count = cartProduct.quantity + 1;
+            cartProduct.quantity = count;
+            const others = cart.filter(pd => pd.key === toBeAddedKey);
+            newCart = [...others, sameProduct];
+        }
+        else{
+            cartProduct.quantity = 1;
+            newCart = [...cart, cartProduct]
+        }
         setCart(newCart);
-        const vcount = newCart.filter(pd => pd.key === cartProduct.key).length;
-        addToDatabaseCart(cartProduct.key, vcount)
+        addToDatabaseCart(cartProduct.key, count)
     }
     return (
         <div className="shop-container">
             <div className="product-container">
                 {
                     products.map(
-                        pd => <Product
+                        (pd, idx) => <Product
+                            key={idx}
                             showCartBtn = {true}
                             handleProducts = {handleProducts}
                             product={pd}>
@@ -31,7 +58,7 @@ const Shop = () => {
                 }
             </div>
             <div className="cart-container">
-                <Cart revBtnShow = {true} cart = {cart}></Cart>
+                <Cart checkOutBtn = {false} revBtnShow = {true} cart = {cart}></Cart>
             </div>
 
         </div>
