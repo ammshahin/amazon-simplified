@@ -1,8 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import '../Product/Product.css'
 
 const Cart = (props) => {
     const cart = props.cart;
     const itemPrice = cart.reduce((total, ct) => total + ct.price, 0)
+    const revBtnShow = props.revBtnShow;
 
     let shippingCost = 0;
     if(itemPrice > 40){
@@ -24,13 +27,15 @@ const Cart = (props) => {
         return Number(precise);
     }
     return (
-        <div>
+        <div >
             <h3>Order Summary</h3>
             <p>Items Ordered: {cart.length}</p>
             <p>Product Price: {preciseNumber(itemPrice)}</p>
             <p><small>Shipping Cost: {shippingCost} </small></p>
-            <p><small>VAT: {preciseNumber(tax)}</small></p>
-            <p>Total Price: {preciseNumber(grandTotal) } </p>
+            <p ><small>VAT: {preciseNumber(tax)}</small></p>
+            <h4 style={{color:'#dc143c'}}>Total Price: {preciseNumber(grandTotal) } </h4>
+            {revBtnShow && <Link to = '/order'> <button className = "cart-btn" >  Review Items</button></Link>}
+            <button className = "cart-btn">Checkout</button>
         </div>
     );
 };
